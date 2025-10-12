@@ -12,6 +12,7 @@ import(
 	swaggerFiles "github.com/swaggo/files"
     ginSwagger "github.com/swaggo/gin-swagger"
 	"github.com/gin-contrib/cors"
+
 	_ "week10-lab3/docs"
 )
 
@@ -78,7 +79,7 @@ func initDB(){
 // @Produce  json
 // @Success 200  {object}  Book
 // @Failure 404  {object}  ErrorResponse
-// @Router  /books/
+// @Router  /books [get]
 func getAllBooks(c *gin.Context) {
     var rows *sql.Rows
     var err error
@@ -106,6 +107,14 @@ func getAllBooks(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// @Summary Get book by ID
+// @Description Get details of a book by ID
+// @Tags Books
+// @Produce  json
+// @Param   id   path      int     true  "Book ID"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  /books/{id} [get]
 func getBook(c *gin.Context) {
     id := c.Param("id")
     var book Book
@@ -125,9 +134,17 @@ func getBook(c *gin.Context) {
     c.JSON(http.StatusOK, book)
 }
 
+// @Summary Post book
+// @Description post new book
+// @Tags Books
+// @Produce  json
+// @Param   book  body  Book  true  "Book JSON"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  /books/ [post]
 func createBook(c *gin.Context) {
     var newBook Book
-
+    
     if err := c.ShouldBindJSON(&newBook); err != nil {
         c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
         return
@@ -156,6 +173,15 @@ func createBook(c *gin.Context) {
     c.JSON(http.StatusCreated, newBook) // ใช้ 201 Created
 }
 
+// @Summary update book by ID
+// @Description update details of a book by ID
+// @Tags Books
+// @Produce  json
+// @Param   id   path      int     true  "Book ID"
+// @Param   book  body  Book  true  "Book JSON"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  /books/{id} [put]
 func updateBook(c *gin.Context) {
     var ID int
     id := c.Param("id")
@@ -188,6 +214,14 @@ func updateBook(c *gin.Context) {
 	c.JSON(http.StatusOK, updateBook)
 }
 
+// @Summary Delete book by ID
+// @Description Delete details of a book by ID
+// @Tags Books
+// @Produce  json
+// @Param   id   path      int     true  "Book ID"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  /books/{id} [delete]
 func deleteBook(c *gin.Context) {
     id := c.Param("id")
 
@@ -214,14 +248,16 @@ func deleteBook(c *gin.Context) {
 // @title           Simple API Example
 // @version         1.0
 // @description     This is a simple example of using Gin with Swagger.
-// @host            localhost:8080
+// @host localhost:8080
+// @host 127.0.0.1:8080
 // @BasePath        /api/v1
 func main(){
 	initDB()
 	defer db.Close()
 
 	r := gin.Default()	
-	r.Use(cors.Default())
+    r.Use(cors.Default())
+
 	r.GET("/docs/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
 
 	r.GET("/health", func(c *gin.Context) {

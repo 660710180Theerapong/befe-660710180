@@ -27,11 +27,10 @@ const BookCard = ({ book }) => {
         {/* Book Cover */}
         <div className="relative h-80 bg-gradient-to-br from-gray-100 to-gray-200">
           <img 
-            src={book.coverImage || '/images/book-placeholder.jpg'} 
+            src={book.coverImage || '/images/placeholder-book.jpg'} 
             alt={book.title}
             className="w-full h-full object-cover"
           />
-          
           {/* Badges */}
           {book.isNew && (
             <span className="absolute top-3 left-3 bg-green-500 text-white px-3 py-1 
