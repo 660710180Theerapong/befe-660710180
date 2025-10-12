@@ -13,6 +13,8 @@ import BookDetailPage from './pages/BookDetailPage';
 import CategoryPage from './pages/CategoryPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
+import AddBookPage from './pages/AddBookPage';
+import LoginPage from './pages/LoginPage';
 
 function App() {
   return (
@@ -24,6 +26,8 @@ function App() {
           <Routes>
             <Route path="/" element={<HomePage />} />
             <Route path="/books" element={<BookListPage />} />
+            <Route path="/store-manager/add-book" element={<AddBookPage />}/>
+            <Route path="/login" element={<LoginPage />}/>
             <Route path="/books/:id" element={<BookDetailPage />} />
             <Route path="/categories" element={<CategoryPage />} />
             <Route path="/categories/:category" element={<CategoryPage />} />

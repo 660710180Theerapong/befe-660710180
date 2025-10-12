@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import BookCard from './BookCard';
 
-const FeaturedBooks = () => {
+const NewBook = () => {
   // กำหนด State สำหรับจัดการข้อมูล
   const [featuredBooks, setFeaturedBooks] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -22,8 +22,8 @@ const FeaturedBooks = () => {
         const data = await response.json();
 
         // สุ่มหนังสือ 3 เล่ม
-        const shuffled = [...data].sort(() => 0.5 - Math.random());
-        const selected = shuffled.slice(0, 3);
+        const shuffled = [...data].sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+        const selected = shuffled.slice(0, 5);
 
         setFeaturedBooks(selected);
         setError(null);
@@ -76,4 +76,4 @@ const FeaturedBooks = () => {
   );
 };
 
-export default FeaturedBooks;
+export default NewBook;
