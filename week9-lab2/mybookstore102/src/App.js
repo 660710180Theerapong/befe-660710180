@@ -14,6 +14,7 @@ import CategoryPage from './pages/CategoryPage';
 import AboutPage from './pages/AboutPage';
 import ContactPage from './pages/ContactPage';
 import AddBookPage from './pages/AddBookPage';
+import ListPage from './pages/ListPage';
 import LoginPage from './pages/LoginPage';
 
 function App() {
@@ -28,6 +29,7 @@ function App() {
             <Route path="/books" element={<BookListPage />} />
             <Route path="/store-manager/add-book" element={<AddBookPage />}/>
             <Route path="/login" element={<LoginPage />}/>
+            <Route path="/store-manager/all-book" element={<ListPage/>}/>
             <Route path="/books/:id" element={<BookDetailPage />} />
             <Route path="/categories" element={<CategoryPage />} />
             <Route path="/categories/:category" element={<CategoryPage />} />
