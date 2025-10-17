@@ -94,26 +94,37 @@ func initDB(){
 // @Failure 404  {object}  ErrorResponse
 // @Router  /books [get]
 func getAllBooks(c *gin.Context) {
+    debug := " "
     category := c.Query("category")
     var rows *sql.Rows
     var err error
     // ลูกค้าถาม "มีหนังสืออะไรบ้าง"
     if category !=""{
-     rows, err = db.Query("SELECT id, title, author, category FROM books WHERE category = $1", category)
-    }else{
+     rows, err = db.Query("SELECT id, title, author, isbn, year, price, created_at, updated_at, category, rating FROM books WHERE category = $1", category)
+     debug= "GetAllCate"
+     log.Print("check: ",debug)
+     }else{
     rows, err = db.Query("SELECT id, title, author, isbn, year, price, created_at, updated_at, category, rating FROM books")
+  
+    debug= "GetAll"
+    log.Print("check: ",debug)
     }
     if err != nil {
         c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
         return
     }
     defer rows.Close() // ต้องปิด rows เสมอ เพื่อคืน Connection กลับ pool
-
+   
     var books []Book
     for rows.Next() {
         var book Book
-        err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.ISBN, &book.Year, &book.Price, &book.CreatedAt, &book.UpdatedAt)
-        if err != nil {
+            if category != "" {
+        err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.Category)
+    } else {
+        err = rows.Scan(&book.ID, &book.Title, &book.Author, &book.ISBN, &book.Year, &book.Price, &book.CreatedAt, &book.UpdatedAt, &book.Category, &book.Rating)
+    }
+    
+    if err != nil {
             // handle error
         }
         books = append(books, book)
@@ -121,7 +132,7 @@ func getAllBooks(c *gin.Context) {
 	if books == nil {
 		books = []Book{}
 	}
-
+    log.Print("check: ",debug)
 	c.JSON(http.StatusOK, books)
 }
 
@@ -162,11 +173,11 @@ func getBook(c *gin.Context) {
 // @Router  /books/{category} [get]
 func getBookByCategory(c *gin.Context) {
     category := c.Param("category")
-    var book Book
+  
     var rows *sql.Rows
     var err error
     // QueryRow ใช้เมื่อคาดว่าจะได้ผลลัพธ์ 0 หรือ 1 แถว
-    row, err = db.Query("SELECT id, title, author, category FROM books WHERE category = $1", category)
+    rows, err = db.Query("SELECT id, title, author, category FROM books WHERE category = $1", category)
 
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "book not found"})
@@ -193,16 +204,21 @@ func getBookByCategory(c *gin.Context) {
 }
 
 func Search (c *gin.Context){
-        keyword := c.Param("keyword")
-    var book Book
+    q := c.Query("q")
+
     var rows *sql.Rows
     var err error
     
-    //searchQuery := "%"+keyword+"%"
-    rows, err = db.Query("SELECT id, title, author, category,isbn, year,price,created_at, updated_at
-            FROM books 
-            WHERE title  LIKE        $1", searchQuery)
-
+    //searchQuery := q
+    searchQuery := "%"+q+"%"
+    rows, err = db.Query(`SELECT id, title, author, category, isbn, year, price, created_at, updated_at FROM books 
+    WHERE title LIKE $1
+    OR author   LIKE $1
+    OR category LIKE $1
+    OR isbn     LIke $1`, searchQuery)
+    log.Print("check: search->", searchQuery)
+    log.Print("SELECT id, title, author, category, isbn, year, price, created_at, updated_at FROM books WHERE title LIKE $1", searchQuery)
+    
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "book not found"})
         return
@@ -214,7 +230,7 @@ func Search (c *gin.Context){
     var books []Book
     for rows.Next() {
         var book Book
-        err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.ISBN, &book.Year, &book.Price, &book.CreatedAt, &book.UpdatedAt)
+        err := rows.Scan(&book.ID, &book.Title, &book.Author, &book.Category, &book.ISBN, &book.Year, &book.Price, &book.CreatedAt, &book.UpdatedAt)
         if err != nil {
             // handle error
         }
@@ -228,11 +244,11 @@ func Search (c *gin.Context){
 
 }
 func getFeatureBooks(c *gin.Context){
-    var book Book
+
     var rows *sql.Rows
     var err error
     // QueryRow ใช้เมื่อคาดว่าจะได้ผลลัพธ์ 0 หรือ 1 แถว
-    row, err = db.Query("SELECT id, title, author, category FROM books WHERE rateing > 4.5")
+    rows, err = db.Query("SELECT id, title, author, category FROM books WHERE rateing > 4.5")
 
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "book not found"})
@@ -260,11 +276,11 @@ func getFeatureBooks(c *gin.Context){
 }
 
 func getNewBooks(c *gin.Context){
-    var book Book
+   
     var rows *sql.Rows
     var err error
     // QueryRow ใช้เมื่อคาดว่าจะได้ผลลัพธ์ 0 หรือ 1 แถว
-    row, err = db.Query("SELECT id, title, author, category FROM books WHERE is_new =true")
+    rows, err = db.Query("SELECT id, title, author, category FROM books WHERE is_new =true")
 
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "book not found"})
@@ -292,11 +308,11 @@ func getNewBooks(c *gin.Context){
 }
 
 func getDiscountedBooks(c *gin.Context){
-    var book Book
+
     var rows *sql.Rows
     var err error
     // QueryRow ใช้เมื่อคาดว่าจะได้ผลลัพธ์ 0 หรือ 1 แถว
-    row, err = db.Query("SELECT id, title, author, category FROM books WHERE discount > 0")
+    rows, err = db.Query("SELECT id, title, author, category FROM books WHERE discount > 0")
 
     if err == sql.ErrNoRows {
         c.JSON(http.StatusNotFound, gin.H{"error": "book not found"})
@@ -467,7 +483,7 @@ func main(){
 	 	api.DELETE("/books/:id", deleteBook)
 
         api.GET("categories/:category", getBookByCategory)
-        api.GET("books/search", search)// - ค้นหา
+        api.GET("books/search", Search)// - ค้นหา
         api.GET("books/featured", getFeatureBooks)// - หนังสือแนะนำ
         api.GET("books/new", getNewBooks)
         api.GET("books/discounted", getDiscountedBooks)// - หนังสือลดราคา

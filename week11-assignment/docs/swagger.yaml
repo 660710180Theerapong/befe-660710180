@@ -97,11 +97,11 @@ paths:
       - Books
   /books/{category}:
     get:
-      description: Get details of a book by ID
+      description: Get details of a book by Category
       parameters:
-      - description: Book ID
+      - description: Book Category
         in: path
-        name: id
+        name: category
         required: true
         type: integer
       produces:
@@ -115,7 +115,7 @@ paths:
           description: Not Found
           schema:
             $ref: '#/definitions/main.ErrorResponse'
-      summary: Get book by ID
+      summary: Get book by Category
       tags:
       - Books
   /books/{id}:
