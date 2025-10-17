@@ -80,19 +80,19 @@ const docTemplate = `{
         },
         "/books/{category}": {
             "get": {
-                "description": "Get details of a book by ID",
+                "description": "Get details of a book by Category",
                 "produces": [
                     "application/json"
                 ],
                 "tags": [
                     "Books"
                 ],
-                "summary": "Get book by ID",
+                "summary": "Get book by Category",
                 "parameters": [
                     {
                         "type": "integer",
-                        "description": "Book ID",
-                        "name": "id",
+                        "description": "Book Category",
+                        "name": "category",
                         "in": "path",
                         "required": true
                     }
