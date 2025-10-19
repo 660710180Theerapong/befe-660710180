@@ -203,6 +203,15 @@ func getBookByCategory(c *gin.Context) {
 	c.JSON(http.StatusOK, books)
 }
 
+// @Summary get Search
+// @Description search  book
+// @Tags search
+// @Produce  json
+// @Param   q  path  string  true  "Book JSON"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  books/search/ [get]
+
 func Search (c *gin.Context){
     q := c.Query("q")
 
@@ -243,6 +252,15 @@ func Search (c *gin.Context){
 	c.JSON(http.StatusOK, books)
 
 }
+
+// @Summary Get book by Feature
+// @Description Get details of a book by Feature
+// @Tags Books
+// @Produce  json
+// @Param   feature   path      string     true  "Book Feature"
+// @Success 200  {object}  Book
+// @Failure 404  {object}  ErrorResponse
+// @Router  /books/category/ [get]
 func getFeatureBooks(c *gin.Context){
 
     var rows *sql.Rows
