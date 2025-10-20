@@ -254,7 +254,7 @@ func Search (c *gin.Context){
 }
 
 // @Summary Get book by Feature
-// @Description Get details of a book by Feature
+// @Description Get details of a book by Featuredocker
 // @Tags Books
 // @Produce  json
 // @Param   feature   path      string     true  "Book Feature"
