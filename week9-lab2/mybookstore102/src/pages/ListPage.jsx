@@ -70,8 +70,14 @@ const ListPage = () => {
   // กรณีแสดงผลข้อมูลปกติ
   return (
     <div>
+    <div className='px-6 py-4 whitespqce-nowrap'>
+        <buttom type="add" className="px-4 py-0 bg-green-400 text-viridian-900 
+              font-semibold rounded-lg hover:bg-yellow-300 transition-colors"><NavLink to = "/store-manager/add-book">เพิ่ม</NavLink></buttom>
+    </div>
+
       <div className="bg-white text-black rounded-xl shadow-2xl overflow-hidden">
-        <table className="w-full border-collapse mb-4">
+
+        <table className="w-full border-collapse mb-4 divide-y divide-gray-400">
           <thead className="bg-green-300 text-gray-900">
             <tr>
               <th>ID</th>
@@ -87,16 +93,16 @@ const ListPage = () => {
             </thead>
             <tbody>
             {featuredBooks.map(book => (
-            <tr>
-                <td>{book.id}</td>
-                <td>{book.title}</td>
-                <td>{book.author}</td>
-                <td>{book.year}</td>
-                <td>{book.price}</td>
-                <td>{book.category}</td>
-                <td>{book.rating}</td>
-                <td><buttom><NavLink to = "/boks/edit">แก้ไข</NavLink></buttom></td>
-                <td><buttom><NavLink to = "/boks/delete">ลบ</NavLink></buttom></td>
+            <tr className='divide-y divide-gray-400'>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.id}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.title}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.author}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.year}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.price}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.category}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'>{book.rating}</td>
+                <td className='px-6 py-4 whitespqce-nowrap'><buttom><NavLink to = "/boks/edit">แก้ไข</NavLink></buttom></td>
+                <td className='px-6 py-4 whitespqce-nowrap'><buttom><NavLink to = "/boks/delete">ลบ</NavLink></buttom></td>
             </tr>
             ))}
           </tbody>

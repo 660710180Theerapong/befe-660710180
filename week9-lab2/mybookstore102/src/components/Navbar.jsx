@@ -93,9 +93,9 @@ const Navbar = () => {
                 </span>
               )}
             </button>
-            
-            <button className="p-2 text-gray-600 hover:text-viridian-600 transition-colors">
-              <UserIcon className="h-6 w-6" />
+            {/*Profile Avatar*/}
+            <button className="p-2 text-gray-600 hover:text -viridian-600 transition-colors">
+              <NavLink to = "login"><UserIcon className="h-6 w-6" /></NavLink>
             </button>
 
             {/* Mobile Menu Toggle */}
